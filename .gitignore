@@ -7,8 +7,7 @@ npm-debug.log
 # Environment Variables should NEVER be published
 .env
 
-# Windows
-Thumbs.db
+# WindowsThumbs.db
 Thumbs.db:encryptable
 ehthumbs.db
 *.lnk

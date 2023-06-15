@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
 
-//Conectanto ao MongoDG
+//Conect to MongoDG
 
 const DB_PASSWORD = process.env.PASSWORD;
-const MONGO_URI= `mongodb+srv://elidianeasb:${DB_PASSWORD}@cluster0.3hit6tl.mongodb.net/?retryWrites=true&w=majority`
+const MONGO_URI= `mongodb+srv://elidianeasb:${DB_PASSWORD}@cluster0.3hit6tl.mongodb.net/?retryWrites=true&w=majority` //atlas link
 
-mongoose.connect(MONGO_URI) //esse link foi gerado pelo atlas
+mongoose.connect(MONGO_URI)
 .then(() => {
     console.log("Connected to MongoDB!")
 })
