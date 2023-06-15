@@ -4,7 +4,6 @@ require('dotenv').config(); //allows using the environment variables created at 
 require("./database"); //Connect to the database
 
 
-
 const express = require('express') //Import express
 const app = express() //Inicialize express
 
@@ -17,13 +16,4 @@ app.use(express.urlencoded({ extended: true }));
 const taskRoutes = require('./routes/taskRoutes') //import taskRoutes
 app.use('/', taskRoutes) //redirect to taskRoutes
 
-
-
-
-
-
-
-
-
-
-
+module.exports = app;
