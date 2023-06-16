@@ -5,37 +5,64 @@ const Task = require('../models/Task')
 
 
 //Criar tasks
-router.post('/task', (req, res) => { //async garante que esse tempo de operação com o banco de dados seja respeitado e só envia uma resposta ao cliente quando essa operação for concluída
+router.post('/tasks', async (req, res) => { //async garante que esse tempo de operação com o banco de dados seja respeitado e só envia uma resposta ao cliente quando essa operação for concluída
+    try {
+        const { text } = req.body;
+        await Task.create({ text })
+        res.status(201).json({ message: 'Task created' })
 
-    const { text } = req.body;
-
-    Task.create({ text })
-        .then(response => res.status(201).json(response))
-        .catch(error => res.json(error))
+    } catch (error) {
+        res.status(500).json({ error: error })
+    }
 })
 
-router.get('/task', (req, res) => {
+router.get('/tasks', async (req, res) => {
+    try {
+        const tasksList = await Task.find()
+        res.status(200).json(tasksList.map((task) => ({identifier: task._id, text: task.text, isCompleted: task.isCompleted})))
 
-    Task.find()
-    .then(response => res.status(200).json(response))
-    .catch(error => res.status(500).json(error))
+    } catch (error) {
+        res.status(500).json({ error: error })
+    }
 })
 
-router.delete('/task/:id', (req, res) => {
+router.delete('/tasks/:id', async (req, res) => {
+
     const { id } = req.params;
-    Task.findByIdAndDelete(id)
-    .then(res.status(200).json({ message: `The task with id ${id} was deleted successfully` }))
-    .catch(error => res.json(error));   
 
+    try {
+        await Task.findByIdAndDelete(id)
+        res.status(200).json({ message: `The task ${id} was deleted successfully` })
+    } catch (error) {
+        res.json(error)
+    }
 })
 
-router.put('/task/:id', (req, res) => {
+router.put('/tasks/:id', async (req, res) => {
     const { id } = req.params; // Obtém o parâmetro "id" da URL
     const body = req.body; // Obtém o corpo da requisição (dados a serem atualizados)
 
-    Task.findByIdAndUpdate(id, { text: body.text })
-    .then(res.status(200).json({ message: `The task with id ${id} was edited successfully` }))
-    .catch(error => res.json(error));   
+    try {
+        await Task.findByIdAndUpdate(id, { text: body.text })
+        res.status(200).json({ message: `The task was edited successfully` })
+
+    } catch (error) {
+        res.json(error)
+    }
+})
+
+router.post('/tasks/:id/complete', async (req, res) => {
+    const { id } = req.params;
+    
+    try {
+        const task = await Task.findById(id)
+        task.isCompleted = !task.isCompleted
+        await task.save()
+        res.status(200).json({ message: `Task is ${task.isCompleted ? "completed" : "not completed"}` })
+
+    } catch (error) {
+        res.json(error)
+    }
 })
 
 module.exports = router;
